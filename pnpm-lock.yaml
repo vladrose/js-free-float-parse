@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      js-free-float-parse:
+        specifier: 'link:'
+        version: 'link:'
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.13.0

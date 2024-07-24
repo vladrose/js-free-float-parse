@@ -20,6 +20,17 @@ describe("jsFreeFloatParse", () => {
     expect(jsFreeFloatParse("0,0")).toEqual(["0,0", 0])
   })
 
+  it("parses E values", () => {
+    expect(jsFreeFloatParse("5e-8")).toEqual(["0.00000005", 5e-8])
+    expect(jsFreeFloatParse("10e+8")).toEqual(["1000000000", 1000000000])
+
+    expect(jsFreeFloatParse("5.1e-8")).toEqual(["0.000000051", 5.1e-8])
+    expect(jsFreeFloatParse("1.3e+8")).toEqual(["130000000", 130000000])
+
+    expect(jsFreeFloatParse("5e-41")).toEqual(["0.00000000000000000000000000000000000000005", 5e-41])
+    expect(jsFreeFloatParse("1e+41")).toEqual(["100000000000000000000000000000000000000000", 1e+41])
+  })
+
   it("ignores invalid characters", () => {
     expect(jsFreeFloatParse("  23  ")).toEqual(["23", 23])
     expect(jsFreeFloatParse("12a3")).toEqual(["123", 123])
@@ -105,9 +116,12 @@ describe("jsFreeFloatParse", () => {
 
   describe("handles options", () => {
     it("precision correctly", () => {
-      const input = "0.12345678901234567890"
-      const expectedOutput = ["0,12345678901235", 0.12345678901235]
-      expect(jsFreeFloatParse(input, { precision: 14 })).toEqual(expectedOutput)
+      const input = "0,12345678901234567890"
+
+      expect(jsFreeFloatParse(input)).toEqual([input, 0.12345678901234568])
+      expect(jsFreeFloatParse(input, { precision: 0 })).toEqual([input, 0.12345678901234568])
+      expect(jsFreeFloatParse(input, { precision: 10 })).toEqual(["0.1234567890", 0.123456789])
+      expect(jsFreeFloatParse(input, { precision: 1 })).toEqual(["0.1", 0.1])
     })
 
     it("min correctly", () => {

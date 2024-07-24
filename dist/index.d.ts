@@ -1,4 +1,4 @@
-declare type Options = {
+type Options = {
     /**
      * The minimum allowable value. Defaults to -Infinity.
      * */

@@ -21,14 +21,17 @@ describe("jsFreeFloatParse", () => {
   })
 
   it("parses E values", () => {
-    expect(jsFreeFloatParse("5e-8")).toEqual(["0.00000005", 5e-8])
+    expect(jsFreeFloatParse("5e-8")).toEqual(["0,00000005", 5e-8])
     expect(jsFreeFloatParse("10e+8")).toEqual(["1000000000", 1000000000])
 
-    expect(jsFreeFloatParse("5.1e-8")).toEqual(["0.000000051", 5.1e-8])
+    expect(jsFreeFloatParse("5.1e-8")).toEqual(["0,000000051", 5.1e-8])
     expect(jsFreeFloatParse("1.3e+8")).toEqual(["130000000", 130000000])
 
-    expect(jsFreeFloatParse("5e-41")).toEqual(["0.00000000000000000000000000000000000000005", 5e-41])
+    expect(jsFreeFloatParse("5e-41")).toEqual(["0,00000000000000000000000000000000000000005", 5e-41])
+    // eslint-disable-next-line
     expect(jsFreeFloatParse("1e+41")).toEqual(["100000000000000000000000000000000000000000", 1e+41])
+
+    expect(jsFreeFloatParse("5.1e-8", { dot: true })).toEqual(["0.000000051", 5.1e-8])
   })
 
   it("ignores invalid characters", () => {

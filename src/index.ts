@@ -1,4 +1,4 @@
-import Decimal from "decimal.js";
+import Decimal from "decimal.js"
 
 type Options = {
   /**
@@ -31,6 +31,7 @@ export default function jsFreeFloatParse(input: string, options?: Options) {
     let outputString: string = ""
     let outputNumber = new Decimal(0)
 
+    // eslint-disable-next-line no-inner-declarations
     function result() {
       return [outputString, outputNumber.toNumber()] as const
     }
@@ -74,38 +75,39 @@ export default function jsFreeFloatParse(input: string, options?: Options) {
         outputNumber = new Decimal(input)
 
         // Split the number into coefficient and exponent parts
-        const [coefficientStr, exponentStr] = input.split('e');
+        const [coefficientStr, exponentStr] = input.split("e")
         // Parse the exponent part into an integer
-        const exponent = parseInt(exponentStr, 10);
+        const exponent = parseInt(exponentStr, 10)
 
         // Split the coefficient part into integer and decimal parts
-        const [integerPart, decimalPart = ''] = coefficientStr.replaceAll(".", ",").split(',');
+        const [integerPart, decimalPart = ""] = coefficientStr.replaceAll(".", ",").split(",")
 
         // When the exponent is positive
         if (exponent > 0) {
           // Calculate the length of the decimal part
-          const totalDecimalLength = decimalPart.length;
+          const totalDecimalLength = decimalPart.length
 
           if (totalDecimalLength > exponent) {
             // If the decimal part is longer than the exponent
             // Move the decimal point to the right within the decimal part
-            const newIntegerPart = integerPart + decimalPart.slice(0, exponent);
-            const newDecimalPart = decimalPart.slice(exponent);
-            outputString = newIntegerPart + '.' + newDecimalPart;
+            const newIntegerPart = integerPart + decimalPart.slice(0, exponent)
+            const newDecimalPart = decimalPart.slice(exponent)
+            outputString = newIntegerPart + "." + newDecimalPart
           } else {
             // If the decimal part is shorter or equal to the exponent
             // Add necessary zeros to the end of the integer part
-            const zeroPadding = '0'.repeat(exponent - totalDecimalLength);
-            outputString = integerPart + decimalPart + zeroPadding;
+            const zeroPadding = "0".repeat(exponent - totalDecimalLength)
+            outputString = integerPart + decimalPart + zeroPadding
           }
           // When the exponent is negative
         } else {
           // Calculate the necessary zeros to pad before the integer part
-          const zeroPadding = '0'.repeat(Math.abs(exponent) - 1);
+          const zeroPadding = "0".repeat(Math.abs(exponent) - 1)
           // Construct the result string with leading zeros
-          outputString = '0.' + zeroPadding + integerPart + decimalPart;
+          outputString = "0." + zeroPadding + integerPart + decimalPart
         }
 
+        outputString = replaceDotByComma(outputString, dot)
         return result()
       }
     }
@@ -145,8 +147,8 @@ export default function jsFreeFloatParse(input: string, options?: Options) {
     }
 
     /*
-    * Final check and precision
-    * */
+     * Final check and precision
+     * */
 
     outputNumber = new Decimal(input)
 

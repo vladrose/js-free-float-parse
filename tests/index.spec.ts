@@ -4,7 +4,7 @@ import jsFreeFloatParse from "../src/index"
 
 describe("jsFreeFloatParse", () => {
   it("parses empty string", () => {
-    expect(jsFreeFloatParse("")).toEqual(["", 0])
+    expect(jsFreeFloatParse("")).toEqual(["0", 0])
   })
 
   it("parses short exceptions", () => {
@@ -137,6 +137,10 @@ describe("jsFreeFloatParse", () => {
       expect(jsFreeFloatParse("100", { max: 90 })).toEqual(["90", 90])
       expect(jsFreeFloatParse("100.15", { max: 100.14 })).toEqual(["100,14", 100.14])
       expect(jsFreeFloatParse("-0.15", { max: -0.25 })).toEqual(["-0,25", -0.25])
+    })
+
+    it("min with empty string correctly", () => {
+      expect(jsFreeFloatParse("", { min: 20 })).toEqual(["20", 20])
     })
 
     it("min with 0.0 string correctly", () => {

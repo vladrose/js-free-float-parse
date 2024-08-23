@@ -26,10 +26,13 @@ function replaceDotByComma(input: string, dot = false) {
 
 export default function jsFreeFloatParse(input: string, options?: Options) {
   try {
-    const { min = -Infinity, max = Infinity, dot = false, precision } = options || {}
+    const { min, max, dot = false, precision } = options || {}
 
-    let outputString: string = ""
-    let outputNumber = new Decimal(0)
+    const isMin = typeof min === "number"
+    const isMax = typeof max === "number"
+
+    let outputNumber = new Decimal(isMin ? min : 0)
+    let outputString: string = outputNumber.toString()
 
     // eslint-disable-next-line no-inner-declarations
     function result() {
@@ -161,12 +164,12 @@ export default function jsFreeFloatParse(input: string, options?: Options) {
     }
 
     // Apply min/max
-    if (outputNumber.lt(min)) {
+    if (isMin && outputNumber.lt(min)) {
       outputNumber = new Decimal(min)
       outputString = replaceDotByComma(outputNumber.toString(), dot)
     }
 
-    if (outputNumber.gt(max)) {
+    if (isMax && outputNumber.gt(max)) {
       outputNumber = new Decimal(max)
       outputString = replaceDotByComma(outputNumber.toString(), dot)
     }

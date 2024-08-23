@@ -10,9 +10,11 @@ function replaceDotByComma(input, dot = false) {
 }
 function jsFreeFloatParse(input, options) {
     try {
-        const { min = -Infinity, max = Infinity, dot = false, precision } = options || {};
-        let outputString = "";
-        let outputNumber = new decimal_js_1.default(0);
+        const { min, max, dot = false, precision } = options || {};
+        const isMin = typeof min === "number";
+        const isMax = typeof max === "number";
+        let outputNumber = new decimal_js_1.default(isMin ? min : 0);
+        let outputString = outputNumber.toString();
         // eslint-disable-next-line no-inner-declarations
         function result() {
             return [outputString, outputNumber.toNumber()];
@@ -127,11 +129,11 @@ function jsFreeFloatParse(input, options) {
             outputString = replaceDotByComma(input, dot);
         }
         // Apply min/max
-        if (outputNumber.lt(min)) {
+        if (isMin && outputNumber.lt(min)) {
             outputNumber = new decimal_js_1.default(min);
             outputString = replaceDotByComma(outputNumber.toString(), dot);
         }
-        if (outputNumber.gt(max)) {
+        if (isMax && outputNumber.gt(max)) {
             outputNumber = new decimal_js_1.default(max);
             outputString = replaceDotByComma(outputNumber.toString(), dot);
         }

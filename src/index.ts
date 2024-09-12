@@ -1,6 +1,6 @@
 import Decimal from "decimal.js"
 
-type Options = {
+type JsFreeFloatParseOptions = {
   /**
    * The minimum allowable value. Defaults to -Infinity.
    * */
@@ -24,7 +24,7 @@ function replaceDotByComma(input: string, dot = false) {
   return dot ? input : input.replace(".", ",")
 }
 
-export default function jsFreeFloatParse(input: string, options?: Options) {
+export default function jsFreeFloatParse(input: string, options?: JsFreeFloatParseOptions) {
   try {
     const { min, max, dot = false, precision } = options || {}
 
@@ -36,6 +36,7 @@ export default function jsFreeFloatParse(input: string, options?: Options) {
 
     // eslint-disable-next-line no-inner-declarations
     function result() {
+      outputString = replaceDotByComma(outputString, dot)
       return [outputString, outputNumber.toNumber()] as const
     }
 
@@ -110,7 +111,6 @@ export default function jsFreeFloatParse(input: string, options?: Options) {
           outputString = "0." + zeroPadding + integerPart + decimalPart
         }
 
-        outputString = replaceDotByComma(outputString, dot)
         return result()
       }
     }
@@ -152,26 +152,25 @@ export default function jsFreeFloatParse(input: string, options?: Options) {
     /*
      * Final check and precision
      * */
-
     outputNumber = new Decimal(input)
 
     // Set precision
-    if (precision) {
+    if (typeof precision === "number") {
       outputNumber = outputNumber.toDecimalPlaces(precision)
-      outputString = outputNumber.toPrecision(precision)
+      outputString = outputNumber.toFixed(precision)
     } else {
-      outputString = replaceDotByComma(input, dot)
+      outputString = input
     }
 
     // Apply min/max
     if (isMin && outputNumber.lt(min)) {
       outputNumber = new Decimal(min)
-      outputString = replaceDotByComma(outputNumber.toString(), dot)
+      outputString = outputNumber.toString()
     }
 
     if (isMax && outputNumber.gt(max)) {
       outputNumber = new Decimal(max)
-      outputString = replaceDotByComma(outputNumber.toString(), dot)
+      outputString = outputNumber.toString()
     }
 
     return result()

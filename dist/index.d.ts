@@ -1,4 +1,4 @@
-type Options = {
+type JsFreeFloatParseOptions = {
     /**
      * The minimum allowable value. Defaults to -Infinity.
      * */
@@ -17,6 +17,6 @@ type Options = {
      * */
     precision?: number;
 };
-export default function jsFreeFloatParse(input: string, options?: Options): readonly [string, number];
+export default function jsFreeFloatParse(input: string, options?: JsFreeFloatParseOptions): readonly [string, number];
 export {};
 //# sourceMappingURL=index.d.ts.map

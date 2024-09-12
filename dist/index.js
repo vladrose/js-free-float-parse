@@ -17,6 +17,7 @@ function jsFreeFloatParse(input, options) {
         let outputString = outputNumber.toString();
         // eslint-disable-next-line no-inner-declarations
         function result() {
+            outputString = replaceDotByComma(outputString, dot);
             return [outputString, outputNumber.toNumber()];
         }
         if (!input) {
@@ -85,7 +86,6 @@ function jsFreeFloatParse(input, options) {
                     // Construct the result string with leading zeros
                     outputString = "0." + zeroPadding + integerPart + decimalPart;
                 }
-                outputString = replaceDotByComma(outputString, dot);
                 return result();
             }
         }
@@ -121,21 +121,21 @@ function jsFreeFloatParse(input, options) {
          * */
         outputNumber = new decimal_js_1.default(input);
         // Set precision
-        if (precision) {
+        if (typeof precision === "number") {
             outputNumber = outputNumber.toDecimalPlaces(precision);
-            outputString = outputNumber.toPrecision(precision);
+            outputString = outputNumber.toFixed(precision);
         }
         else {
-            outputString = replaceDotByComma(input, dot);
+            outputString = input;
         }
         // Apply min/max
         if (isMin && outputNumber.lt(min)) {
             outputNumber = new decimal_js_1.default(min);
-            outputString = replaceDotByComma(outputNumber.toString(), dot);
+            outputString = outputNumber.toString();
         }
         if (isMax && outputNumber.gt(max)) {
             outputNumber = new decimal_js_1.default(max);
-            outputString = replaceDotByComma(outputNumber.toString(), dot);
+            outputString = outputNumber.toString();
         }
         return result();
     }

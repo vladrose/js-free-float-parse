@@ -18,6 +18,17 @@ describe("jsFreeFloatParse", () => {
     expect(jsFreeFloatParse("-0.")).toEqual(["-0,", 0])
     expect(jsFreeFloatParse("0.0")).toEqual(["0,0", 0])
     expect(jsFreeFloatParse("0,0")).toEqual(["0,0", 0])
+
+    expect(jsFreeFloatParse("123,")).toEqual(["123,", 123])
+    expect(jsFreeFloatParse("123.")).toEqual(["123,", 123])
+    expect(jsFreeFloatParse("1230,")).toEqual(["1230,", 1230])
+    expect(jsFreeFloatParse("1230.")).toEqual(["1230,", 1230])
+    expect(jsFreeFloatParse("-123")).toEqual(["-123", -123])
+    expect(jsFreeFloatParse("-1230")).toEqual(["-1230", -1230])
+    expect(jsFreeFloatParse("-1230,")).toEqual(["-1230,", -1230])
+    expect(jsFreeFloatParse("-1230.")).toEqual(["-1230,", -1230])
+    expect(jsFreeFloatParse("1230.0")).toEqual(["1230,0", 1230])
+    expect(jsFreeFloatParse("1230,0")).toEqual(["1230,0", 1230])
   })
 
   it("parses E values", () => {
@@ -119,25 +130,40 @@ describe("jsFreeFloatParse", () => {
 
   describe("handles options", () => {
     it("precision correctly", () => {
-      const input = "0,12345678901234567890"
+      const inputWithComma = "0,12345678901234567890"
+      const inputWithDot = "0.12345678901234567890"
 
-      expect(jsFreeFloatParse(input, { precision: 0 })).toEqual(["0", 0])
-      expect(jsFreeFloatParse(input, { precision: 1 })).toEqual(["0,1", 0.1])
-      expect(jsFreeFloatParse(input, { precision: 2 })).toEqual(["0,12", 0.12])
-      expect(jsFreeFloatParse(input, { precision: 10 })).toEqual(["0,123456789", 0.123456789])
+      expect(jsFreeFloatParse(inputWithComma, { precision: 0 })).toEqual([inputWithComma, 0])
+      expect(jsFreeFloatParse(inputWithComma, { precision: 1 })).toEqual([inputWithComma, 0.1])
+      expect(jsFreeFloatParse(inputWithComma, { precision: 2 })).toEqual([inputWithComma, 0.12])
+      expect(jsFreeFloatParse(inputWithComma, { precision: 10 })).toEqual([inputWithComma, 0.123456789])
 
-      expect(jsFreeFloatParse(input, { dot: true, precision: 3 })).toEqual(["0.123", 0.123])
-      expect(jsFreeFloatParse(input, { dot: true, precision: 4 })).toEqual(["0.1235", 0.1235])
-      expect(jsFreeFloatParse(input, { dot: true, precision: 5 })).toEqual(["0.12346", 0.12346])
-      expect(jsFreeFloatParse(input, { dot: true, precision: 10 })).toEqual(["0.123456789", 0.123456789])
+      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 3 })).toEqual([inputWithDot, 0.123])
+      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 4 })).toEqual([inputWithDot, 0.1235])
+      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 5 })).toEqual([inputWithDot, 0.12346])
+      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 10 })).toEqual([inputWithDot, 0.123456789])
+      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 16 })).toEqual([
+        inputWithDot,
+        // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
+        0.1234567890123457,
+      ])
+      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 40 })).toEqual([
+        inputWithDot,
+        // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
+        0.1234567890123457,
+      ])
 
-      expect(jsFreeFloatParse("864.1724952396711", { precision: 6 })).toEqual(["864,172495", 864.172495])
-      expect(jsFreeFloatParse("864.1724952396711", { dot: true, precision: 7 })).toEqual(["864.1724952", 864.1724952])
+      expect(jsFreeFloatParse("864.1724952396711", { precision: 6 })).toEqual(["864,1724952396711", 864.172495])
+      expect(jsFreeFloatParse("864.1724952396711", { dot: true, precision: 7 })).toEqual([
+        "864.1724952396711",
+        864.1724952,
+      ])
 
       expect(jsFreeFloatParse("864.1", { dot: true, precision: 2 })).toEqual(["864.1", 864.1])
       expect(jsFreeFloatParse("0.01", { dot: true, precision: 2 })).toEqual(["0.01", 0.01])
-      expect(jsFreeFloatParse("863.0", { dot: true, precision: 2 })).toEqual(["863", 863])
-      expect(jsFreeFloatParse("863.", { dot: true, precision: 2 })).toEqual(["863", 863])
+      expect(jsFreeFloatParse("863.0", { dot: true, precision: 2 })).toEqual(["863.0", 863])
+      expect(jsFreeFloatParse("863.", { dot: true, precision: 2 })).toEqual(["863.", 863])
+      expect(jsFreeFloatParse("863.^7.12", { dot: true, precision: 2 })).toEqual(["863.712", 863.71])
     })
 
     it("min correctly", () => {

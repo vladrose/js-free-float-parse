@@ -120,13 +120,11 @@ function jsFreeFloatParse(input, options) {
          * Final check and precision
          * */
         outputNumber = new decimal_js_1.default(input);
+        outputString = input;
         // Set precision
         if (typeof precision === "number") {
-            outputNumber = outputNumber.toDecimalPlaces(precision);
-            outputString = outputNumber.toString();
-        }
-        else {
-            outputString = input;
+            const boundedPrecision = Math.min(Math.max(precision, 0), 16);
+            outputNumber = outputNumber.toDecimalPlaces(boundedPrecision);
         }
         // Apply min/max
         if (isMin && outputNumber.lt(min)) {

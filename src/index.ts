@@ -153,13 +153,12 @@ export default function jsFreeFloatParse(input: string, options?: JsFreeFloatPar
      * Final check and precision
      * */
     outputNumber = new Decimal(input)
+    outputString = input
 
     // Set precision
     if (typeof precision === "number") {
-      outputNumber = outputNumber.toDecimalPlaces(precision)
-      outputString = outputNumber.toString()
-    } else {
-      outputString = input
+      const boundedPrecision = Math.min(Math.max(precision, 0), 16)
+      outputNumber = outputNumber.toDecimalPlaces(boundedPrecision)
     }
 
     // Apply min/max

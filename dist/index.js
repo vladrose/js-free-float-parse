@@ -123,11 +123,7 @@ function jsFreeFloatParse(input, options) {
         // Set precision
         if (typeof precision === "number") {
             outputNumber = outputNumber.toDecimalPlaces(precision);
-            outputString = outputNumber.toFixed(precision || undefined);
-            // Remove zero from the end after rounding
-            if (outputString.length > 1 && outputString.endsWith("0")) {
-                outputString = outputString.substring(0, outputString.length - 1);
-            }
+            outputString = outputNumber.toString();
         }
         else {
             outputString = input;

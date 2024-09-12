@@ -135,6 +135,9 @@ describe("jsFreeFloatParse", () => {
       expect(jsFreeFloatParse("864.1724952396711", { dot: true, precision: 7 })).toEqual(["864.1724952", 864.1724952])
 
       expect(jsFreeFloatParse("864.1", { dot: true, precision: 2 })).toEqual(["864.1", 864.1])
+      expect(jsFreeFloatParse("0.01", { dot: true, precision: 2 })).toEqual(["0.01", 0.01])
+      expect(jsFreeFloatParse("863.0", { dot: true, precision: 2 })).toEqual(["863", 863])
+      expect(jsFreeFloatParse("863.", { dot: true, precision: 2 })).toEqual(["863", 863])
     })
 
     it("min correctly", () => {

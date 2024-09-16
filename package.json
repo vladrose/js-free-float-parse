@@ -1,6 +1,6 @@
 {
   "name": "js-free-float-parse",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "private": false,
   "license": "MIT",
   "main": "dist/index.js",

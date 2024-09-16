@@ -155,12 +155,6 @@ export default function jsFreeFloatParse(input: string, options?: JsFreeFloatPar
     outputNumber = new Decimal(input)
     outputString = input
 
-    // Set precision
-    if (typeof precision === "number") {
-      const boundedPrecision = Math.min(Math.max(precision, 0), 16)
-      outputNumber = outputNumber.toDecimalPlaces(boundedPrecision)
-    }
-
     // Apply min/max
     if (isMin && outputNumber.lt(min)) {
       outputNumber = new Decimal(min)
@@ -170,6 +164,12 @@ export default function jsFreeFloatParse(input: string, options?: JsFreeFloatPar
     if (isMax && outputNumber.gt(max)) {
       outputNumber = new Decimal(max)
       outputString = outputNumber.toString()
+    }
+
+    // Set precision
+    if (typeof precision === "number") {
+      const boundedPrecision = Math.min(Math.max(precision, 0), 16)
+      outputNumber = outputNumber.toDecimalPlaces(boundedPrecision)
     }
 
     return result()

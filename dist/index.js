@@ -121,11 +121,6 @@ function jsFreeFloatParse(input, options) {
          * */
         outputNumber = new decimal_js_1.default(input);
         outputString = input;
-        // Set precision
-        if (typeof precision === "number") {
-            const boundedPrecision = Math.min(Math.max(precision, 0), 16);
-            outputNumber = outputNumber.toDecimalPlaces(boundedPrecision);
-        }
         // Apply min/max
         if (isMin && outputNumber.lt(min)) {
             outputNumber = new decimal_js_1.default(min);
@@ -134,6 +129,11 @@ function jsFreeFloatParse(input, options) {
         if (isMax && outputNumber.gt(max)) {
             outputNumber = new decimal_js_1.default(max);
             outputString = outputNumber.toString();
+        }
+        // Set precision
+        if (typeof precision === "number") {
+            const boundedPrecision = Math.min(Math.max(precision, 0), 16);
+            outputNumber = outputNumber.toDecimalPlaces(boundedPrecision);
         }
         return result();
     }

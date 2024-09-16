@@ -129,7 +129,7 @@ describe("jsFreeFloatParse", () => {
   })
 
   describe("handles options", () => {
-    it("precision correctly", () => {
+    it("precision correctly with small numbers", () => {
       const inputWithComma = "0,12345678901234567890"
       const inputWithDot = "0.12345678901234567890"
 
@@ -152,7 +152,9 @@ describe("jsFreeFloatParse", () => {
         // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
         0.1234567890123457,
       ])
+    })
 
+    it("precision correctly with big numbers", () => {
       expect(jsFreeFloatParse("864.1724952396711", { precision: 6 })).toEqual(["864,1724952396711", 864.172495])
       expect(jsFreeFloatParse("864.1724952396711", { dot: true, precision: 7 })).toEqual([
         "864.1724952396711",
@@ -164,6 +166,13 @@ describe("jsFreeFloatParse", () => {
       expect(jsFreeFloatParse("863.0", { dot: true, precision: 2 })).toEqual(["863.0", 863])
       expect(jsFreeFloatParse("863.", { dot: true, precision: 2 })).toEqual(["863.", 863])
       expect(jsFreeFloatParse("863.^7.12", { dot: true, precision: 2 })).toEqual(["863.712", 863.71])
+    })
+
+    it("precision correctly with max", () => {
+      expect(jsFreeFloatParse("0.00999999999999999", { dot: true, max: 0.009999999999999998, precision: 12 })).toEqual([
+        "0.00999999999999999",
+        0.01,
+      ])
     })
 
     it("min correctly", () => {

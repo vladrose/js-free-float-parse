@@ -124,11 +124,11 @@ function jsFreeFloatParse(input, options) {
         // Apply min/max
         if (isMin && outputNumber.lt(min)) {
             outputNumber = new decimal_js_1.default(min);
-            outputString = outputNumber.toString();
+            outputString = outputNumber.toFixed();
         }
         if (isMax && outputNumber.gt(max)) {
             outputNumber = new decimal_js_1.default(max);
-            outputString = outputNumber.toString();
+            outputString = outputNumber.toFixed();
         }
         // Set precision
         if (typeof precision === "number") {

@@ -13,7 +13,8 @@ type JsFreeFloatParseOptions = {
      * */
     dot?: boolean;
     /**
-     * The number of decimal places to include in the output. If not specified, the original precision is preserved.
+     * The number of decimal places to include in the output. Doesn't change the string passed!
+     * If precision = 8 and input is "0.00000001" function returns ["0.00000001", 1e-8]
      * */
     precision?: number;
 };

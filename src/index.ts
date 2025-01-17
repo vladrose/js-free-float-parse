@@ -15,7 +15,8 @@ type JsFreeFloatParseOptions = {
    * */
   dot?: boolean
   /**
-   * The number of decimal places to include in the output. If not specified, the original precision is preserved.
+   * The number of decimal places to include in the output. Doesn't change the string passed!
+   * If precision = 8 and input is "0.00000001" function returns ["0.00000001", 1e-8]
    * */
   precision?: number
 }
@@ -158,12 +159,12 @@ export default function jsFreeFloatParse(input: string, options?: JsFreeFloatPar
     // Apply min/max
     if (isMin && outputNumber.lt(min)) {
       outputNumber = new Decimal(min)
-      outputString = outputNumber.toString()
+      outputString = outputNumber.toFixed()
     }
 
     if (isMax && outputNumber.gt(max)) {
       outputNumber = new Decimal(max)
-      outputString = outputNumber.toString()
+      outputString = outputNumber.toFixed()
     }
 
     // Set precision

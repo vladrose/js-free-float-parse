@@ -168,10 +168,20 @@ describe("jsFreeFloatParse", () => {
       expect(jsFreeFloatParse("863.^7.12", { dot: true, precision: 2 })).toEqual(["863.712", 863.71])
     })
 
-    it("precision correctly with max", () => {
-      expect(jsFreeFloatParse("0.00999999999999999", { dot: true, max: 0.009999999999999998, precision: 12 })).toEqual([
-        "0.00999999999999999",
-        0.01,
+    it("precision correctly with a lot of zeros", () => {
+      expect(jsFreeFloatParse("0.10000000000000000001", { dot: true, precision: 8 })).toEqual([
+        "0.10000000000000000001",
+        0.1,
+      ])
+
+      expect(jsFreeFloatParse("0.10000001000000000001", { dot: true, precision: 8 })).toEqual([
+        "0.10000001000000000001",
+        0.10000001,
+      ])
+
+      expect(jsFreeFloatParse("0.10000000100000000001", { dot: true, precision: 8 })).toEqual([
+        "0.10000000100000000001",
+        0.1,
       ])
     })
 
@@ -181,10 +191,23 @@ describe("jsFreeFloatParse", () => {
       expect(jsFreeFloatParse("-0.35", { min: -0.25 })).toEqual(["-0,25", -0.25])
     })
 
+    it("precision correctly with min", () => {
+      expect(jsFreeFloatParse("0.00000004", { dot: true, min: 0.00000003, precision: 8 })).toEqual(["0.00000004", 4e-8])
+    })
+
     it("max correctly", () => {
       expect(jsFreeFloatParse("100", { max: 90 })).toEqual(["90", 90])
       expect(jsFreeFloatParse("100.15", { max: 100.14 })).toEqual(["100,14", 100.14])
       expect(jsFreeFloatParse("-0.15", { max: -0.25 })).toEqual(["-0,25", -0.25])
+    })
+
+    it("precision correctly with max", () => {
+      expect(jsFreeFloatParse("0.00999999999999999", { dot: true, max: 0.009999999999999998, precision: 12 })).toEqual([
+        "0.00999999999999999",
+        0.01,
+      ])
+
+      expect(jsFreeFloatParse("0.00000004", { dot: true, max: 0.00000003, precision: 8 })).toEqual(["0.00000003", 3e-8])
     })
 
     it("min with empty string correctly", () => {

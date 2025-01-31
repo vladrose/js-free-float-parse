@@ -13,10 +13,9 @@ type JsFreeFloatParseOptions = {
      * */
     dot?: boolean;
     /**
-     * The number of decimal places to include in the output. Doesn't change the string passed!
-     * If precision = 8 and input is "0.00000001" function returns ["0.00000001", 1e-8]
+     * The number of decimal places to include in the float output. Does not round the number, just cut
      * */
-    precision?: number;
+    decimals?: number;
 };
 export default function jsFreeFloatParse(input: string, options?: JsFreeFloatParseOptions): readonly [string, number];
 export {};

@@ -8,9 +8,20 @@ const decimal_js_1 = __importDefault(require("decimal.js"));
 function replaceDotByComma(input, dot = false) {
     return dot ? input : input.replace(".", ",");
 }
+function applyDecimals(input, decimals) {
+    if (typeof decimals === "number") {
+        if (!decimals)
+            throw new Error("decimals must be a positive integer");
+        const [basePart, floatPart] = input.split(".");
+        if (floatPart) {
+            return [basePart, floatPart.slice(0, decimals)].join(".");
+        }
+    }
+    return input;
+}
 function jsFreeFloatParse(input, options) {
     try {
-        const { min, max, dot = false, precision } = options || {};
+        const { min, max, dot = false, decimals } = options || {};
         const isMin = typeof min === "number";
         const isMax = typeof max === "number";
         let outputNumber = new decimal_js_1.default(isMin ? min : 0);
@@ -53,8 +64,6 @@ function jsFreeFloatParse(input, options) {
         switch (true) {
             case input.includes("e+"):
             case input.includes("e-"): {
-                // Number stays the same
-                outputNumber = new decimal_js_1.default(input);
                 // Split the number into coefficient and exponent parts
                 const [coefficientStr, exponentStr] = input.split("e");
                 // Parse the exponent part into an integer
@@ -86,6 +95,9 @@ function jsFreeFloatParse(input, options) {
                     // Construct the result string with leading zeros
                     outputString = "0." + zeroPadding + integerPart + decimalPart;
                 }
+                // Set decimals
+                outputString = applyDecimals(outputString, decimals);
+                outputNumber = new decimal_js_1.default(outputString);
                 return result();
             }
         }
@@ -117,7 +129,7 @@ function jsFreeFloatParse(input, options) {
             input = "-" + input;
         }
         /*
-         * Final check and precision
+         * Final check and decimals
          * */
         outputNumber = new decimal_js_1.default(input);
         outputString = input;
@@ -130,11 +142,9 @@ function jsFreeFloatParse(input, options) {
             outputNumber = new decimal_js_1.default(max);
             outputString = outputNumber.toFixed();
         }
-        // Set precision
-        if (typeof precision === "number") {
-            const boundedPrecision = Math.min(Math.max(precision, 0), 16);
-            outputNumber = outputNumber.toDecimalPlaces(boundedPrecision);
-        }
+        // Set decimals
+        outputString = applyDecimals(outputString, decimals);
+        outputNumber = new decimal_js_1.default(outputString);
         return result();
     }
     catch (e) {

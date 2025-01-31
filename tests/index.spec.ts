@@ -129,60 +129,59 @@ describe("jsFreeFloatParse", () => {
   })
 
   describe("handles options", () => {
-    it("precision correctly with small numbers", () => {
-      const inputWithComma = "0,12345678901234567890"
-      const inputWithDot = "0.12345678901234567890"
+    it("decimals correctly with small numbers", () => {
+      const input = "0,12345678901234567890"
 
-      expect(jsFreeFloatParse(inputWithComma, { precision: 0 })).toEqual([inputWithComma, 0])
-      expect(jsFreeFloatParse(inputWithComma, { precision: 1 })).toEqual([inputWithComma, 0.1])
-      expect(jsFreeFloatParse(inputWithComma, { precision: 2 })).toEqual([inputWithComma, 0.12])
-      expect(jsFreeFloatParse(inputWithComma, { precision: 10 })).toEqual([inputWithComma, 0.123456789])
+      expect(jsFreeFloatParse(input, { decimals: 1 })).toEqual(["0,1", 0.1])
+      expect(jsFreeFloatParse(input, { decimals: 2 })).toEqual(["0,12", 0.12])
+      expect(jsFreeFloatParse(input, { decimals: 10 })).toEqual(["0,1234567890", 0.123456789])
 
-      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 3 })).toEqual([inputWithDot, 0.123])
-      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 4 })).toEqual([inputWithDot, 0.1235])
-      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 5 })).toEqual([inputWithDot, 0.12346])
-      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 10 })).toEqual([inputWithDot, 0.123456789])
-      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 16 })).toEqual([
-        inputWithDot,
+      expect(jsFreeFloatParse(input, { dot: true, decimals: 3 })).toEqual(["0.123", 0.123])
+      expect(jsFreeFloatParse(input, { dot: true, decimals: 4 })).toEqual(["0.1234", 0.1234])
+      expect(jsFreeFloatParse(input, { dot: true, decimals: 5 })).toEqual(["0.12345", 0.12345])
+      expect(jsFreeFloatParse(input, { dot: true, decimals: 10 })).toEqual(["0.1234567890", 0.123456789])
+      expect(jsFreeFloatParse(input, { dot: true, decimals: 16 })).toEqual([
+        "0.1234567890123456",
         // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
-        0.1234567890123457,
+        0.1234567890123456,
       ])
-      expect(jsFreeFloatParse(inputWithComma, { dot: true, precision: 40 })).toEqual([
-        inputWithDot,
+      expect(jsFreeFloatParse(input, { dot: true, decimals: 40 })).toEqual([
+        "0.12345678901234567890",
         // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
-        0.1234567890123457,
+        0.1234567890123456789,
       ])
     })
 
-    it("precision correctly with big numbers", () => {
-      expect(jsFreeFloatParse("864.1724952396711", { precision: 6 })).toEqual(["864,1724952396711", 864.172495])
-      expect(jsFreeFloatParse("864.1724952396711", { dot: true, precision: 7 })).toEqual([
-        "864.1724952396711",
-        864.1724952,
-      ])
+    it("decimals correctly with big numbers", () => {
+      expect(jsFreeFloatParse("864.1724952396711", { decimals: 6 })).toEqual(["864,172495", 864.172495])
+      expect(jsFreeFloatParse("864.1724952396711", { dot: true, decimals: 7 })).toEqual(["864.1724952", 864.1724952])
 
-      expect(jsFreeFloatParse("864.1", { dot: true, precision: 2 })).toEqual(["864.1", 864.1])
-      expect(jsFreeFloatParse("0.01", { dot: true, precision: 2 })).toEqual(["0.01", 0.01])
-      expect(jsFreeFloatParse("863.0", { dot: true, precision: 2 })).toEqual(["863.0", 863])
-      expect(jsFreeFloatParse("863.", { dot: true, precision: 2 })).toEqual(["863.", 863])
-      expect(jsFreeFloatParse("863.^7.12", { dot: true, precision: 2 })).toEqual(["863.712", 863.71])
+      expect(jsFreeFloatParse("864.1", { dot: true, decimals: 2 })).toEqual(["864.1", 864.1])
+      expect(jsFreeFloatParse("0.01", { dot: true, decimals: 2 })).toEqual(["0.01", 0.01])
+      expect(jsFreeFloatParse("863.0", { dot: true, decimals: 2 })).toEqual(["863.0", 863])
+      expect(jsFreeFloatParse("863.", { dot: true, decimals: 2 })).toEqual(["863.", 863])
+      expect(jsFreeFloatParse("863.^7.12", { dot: true, decimals: 2 })).toEqual(["863.71", 863.71])
     })
 
-    it("precision correctly with a lot of zeros", () => {
-      expect(jsFreeFloatParse("0.10000000000000000001", { dot: true, precision: 8 })).toEqual([
-        "0.10000000000000000001",
-        0.1,
-      ])
+    it("decimals correctly with a lot of zeros", () => {
+      expect(jsFreeFloatParse("0.10000000000000000001", { dot: true, decimals: 8 })).toEqual(["0.10000000", 0.1])
 
-      expect(jsFreeFloatParse("0.10000001000000000001", { dot: true, precision: 8 })).toEqual([
-        "0.10000001000000000001",
-        0.10000001,
-      ])
+      expect(jsFreeFloatParse("0.10000001000000000001", { dot: true, decimals: 8 })).toEqual(["0.10000001", 0.10000001])
 
-      expect(jsFreeFloatParse("0.10000000100000000001", { dot: true, precision: 8 })).toEqual([
-        "0.10000000100000000001",
-        0.1,
-      ])
+      expect(jsFreeFloatParse("0.10000000100000000001", { dot: true, decimals: 8 })).toEqual(["0.10000000", 0.1])
+
+      expect(jsFreeFloatParse("0.000000001", { dot: true, decimals: 8 })).toEqual(["0.00000000", 0])
+      expect(jsFreeFloatParse("0.00000001", { dot: true, decimals: 8 })).toEqual(["0.00000001", 1e-8])
+    })
+
+    it("decimals correctly and trims decimals", () => {
+      expect(jsFreeFloatParse("5e-8", { decimals: 4 })).toEqual(["0,0000", 0])
+      expect(jsFreeFloatParse("5e-8", { decimals: 7 })).toEqual(["0,0000000", 0])
+      expect(jsFreeFloatParse("5e-8", { decimals: 8 })).toEqual(["0,00000005", 5e-8])
+      expect(jsFreeFloatParse("5.1e-8", { decimals: 4 })).toEqual(["0,0000", 0])
+      expect(jsFreeFloatParse("5.1e-8", { decimals: 8 })).toEqual(["0,00000005", 5e-8])
+      expect(jsFreeFloatParse("5.1e-8", { decimals: 9 })).toEqual(["0,000000051", 5.1e-8])
+      expect(jsFreeFloatParse("10e+8", { decimals: 4 })).toEqual(["1000000000", 1000000000])
     })
 
     it("min correctly", () => {
@@ -191,8 +190,8 @@ describe("jsFreeFloatParse", () => {
       expect(jsFreeFloatParse("-0.35", { min: -0.25 })).toEqual(["-0,25", -0.25])
     })
 
-    it("precision correctly with min", () => {
-      expect(jsFreeFloatParse("0.00000004", { dot: true, min: 0.00000003, precision: 8 })).toEqual(["0.00000004", 4e-8])
+    it("decimals correctly with min", () => {
+      expect(jsFreeFloatParse("0.00000004", { dot: true, min: 0.00000003, decimals: 8 })).toEqual(["0.00000004", 4e-8])
     })
 
     it("max correctly", () => {
@@ -201,13 +200,13 @@ describe("jsFreeFloatParse", () => {
       expect(jsFreeFloatParse("-0.15", { max: -0.25 })).toEqual(["-0,25", -0.25])
     })
 
-    it("precision correctly with max", () => {
-      expect(jsFreeFloatParse("0.00999999999999999", { dot: true, max: 0.009999999999999998, precision: 12 })).toEqual([
-        "0.00999999999999999",
-        0.01,
+    it("decimals correctly with max", () => {
+      expect(jsFreeFloatParse("0.00999999999999999", { dot: true, max: 0.009999999999999998, decimals: 12 })).toEqual([
+        "0.009999999999",
+        0.009999999999,
       ])
 
-      expect(jsFreeFloatParse("0.00000004", { dot: true, max: 0.00000003, precision: 8 })).toEqual(["0.00000003", 3e-8])
+      expect(jsFreeFloatParse("0.00000004", { dot: true, max: 0.00000003, decimals: 8 })).toEqual(["0.00000003", 3e-8])
     })
 
     it("min with empty string correctly", () => {

@@ -15,19 +15,31 @@ type JsFreeFloatParseOptions = {
    * */
   dot?: boolean
   /**
-   * The number of decimal places to include in the output. Doesn't change the string passed!
-   * If precision = 8 and input is "0.00000001" function returns ["0.00000001", 1e-8]
+   * The number of decimal places to include in the float output. Does not round the number, just cut
    * */
-  precision?: number
+  decimals?: number
 }
 
 function replaceDotByComma(input: string, dot = false) {
   return dot ? input : input.replace(".", ",")
 }
 
+function applyDecimals(input: string, decimals: number | undefined) {
+  if (typeof decimals === "number") {
+    if (!decimals) throw new Error("decimals must be a positive integer")
+
+    const [basePart, floatPart] = input.split(".")
+    if (floatPart) {
+      return [basePart, floatPart.slice(0, decimals)].join(".")
+    }
+  }
+
+  return input
+}
+
 export default function jsFreeFloatParse(input: string, options?: JsFreeFloatParseOptions) {
   try {
-    const { min, max, dot = false, precision } = options || {}
+    const { min, max, dot = false, decimals } = options || {}
 
     const isMin = typeof min === "number"
     const isMax = typeof max === "number"
@@ -76,9 +88,6 @@ export default function jsFreeFloatParse(input: string, options?: JsFreeFloatPar
     switch (true) {
       case input.includes("e+"):
       case input.includes("e-"): {
-        // Number stays the same
-        outputNumber = new Decimal(input)
-
         // Split the number into coefficient and exponent parts
         const [coefficientStr, exponentStr] = input.split("e")
         // Parse the exponent part into an integer
@@ -111,6 +120,10 @@ export default function jsFreeFloatParse(input: string, options?: JsFreeFloatPar
           // Construct the result string with leading zeros
           outputString = "0." + zeroPadding + integerPart + decimalPart
         }
+
+        // Set decimals
+        outputString = applyDecimals(outputString, decimals)
+        outputNumber = new Decimal(outputString)
 
         return result()
       }
@@ -151,7 +164,7 @@ export default function jsFreeFloatParse(input: string, options?: JsFreeFloatPar
     }
 
     /*
-     * Final check and precision
+     * Final check and decimals
      * */
     outputNumber = new Decimal(input)
     outputString = input
@@ -167,11 +180,9 @@ export default function jsFreeFloatParse(input: string, options?: JsFreeFloatPar
       outputString = outputNumber.toFixed()
     }
 
-    // Set precision
-    if (typeof precision === "number") {
-      const boundedPrecision = Math.min(Math.max(precision, 0), 16)
-      outputNumber = outputNumber.toDecimalPlaces(boundedPrecision)
-    }
+    // Set decimals
+    outputString = applyDecimals(outputString, decimals)
+    outputNumber = new Decimal(outputString)
 
     return result()
   } catch (e) {

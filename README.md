@@ -21,7 +21,7 @@ const options = {
   min: 0,
   max: 100,
   dot: true,
-  precision: 2
+  decimals: 2
 };
 
 const [string, number] = jsFreeFloatParse('12,34', options);
@@ -48,9 +48,9 @@ type Options = {
    * */
   dot?: boolean
   /**
-   * The number of decimal places to include in the output. If not specified, the original precision is preserved.
+   * The number of decimal places to include in the float output. Does not round the number, just cut
    * */
-  precision?: number
+  decimals?: number
 }
 ```
 

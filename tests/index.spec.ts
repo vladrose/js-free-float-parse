@@ -129,6 +129,10 @@ describe("jsFreeFloatParse", () => {
   })
 
   describe("handles options", () => {
+    it("Handles 0 decimals", () => {
+      expect(jsFreeFloatParse("6926140.944375441", { dot: true, decimals: 0 })).toEqual(["6926140", 6926140])
+    })
+
     it("decimals correctly with small numbers", () => {
       const input = "0,12345678901234567890"
 

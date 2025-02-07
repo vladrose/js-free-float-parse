@@ -26,10 +26,11 @@ function replaceDotByComma(input: string, dot = false) {
 
 function applyDecimals(input: string, decimals: number | undefined) {
   if (typeof decimals === "number") {
-    if (!decimals) throw new Error("decimals must be a positive integer")
+    if (decimals < 0) throw new Error("decimals must be a positive integer")
 
     const [basePart, floatPart] = input.split(".")
     if (floatPart) {
+      if (decimals === 0) return basePart
       return [basePart, floatPart.slice(0, decimals)].join(".")
     }
   }
@@ -186,6 +187,6 @@ export default function jsFreeFloatParse(input: string, options?: JsFreeFloatPar
 
     return result()
   } catch (e) {
-    throw new Error(`jsFreeFloatParse: Failed to parse ${input}`)
+    throw new Error(`jsFreeFloatParse: ${e}`)
   }
 }

@@ -8,8 +8,8 @@ describe("jsFreeFloatParse", () => {
   })
 
   it("parses short exceptions", () => {
-    expect(jsFreeFloatParse(",")).toEqual(["0,0", 0])
-    expect(jsFreeFloatParse(".")).toEqual(["0,0", 0])
+    expect(jsFreeFloatParse(",")).toEqual(["0,", 0])
+    expect(jsFreeFloatParse(".")).toEqual(["0,", 0])
     expect(jsFreeFloatParse("0,")).toEqual(["0,", 0])
     expect(jsFreeFloatParse("0.")).toEqual(["0,", 0])
     expect(jsFreeFloatParse("-")).toEqual(["-", 0])
@@ -88,8 +88,8 @@ describe("jsFreeFloatParse", () => {
   })
 
   it("handles single dot or comma", () => {
-    expect(jsFreeFloatParse(".")).toEqual(["0,0", 0])
-    expect(jsFreeFloatParse(",")).toEqual(["0,0", 0])
+    expect(jsFreeFloatParse(".")).toEqual(["0,", 0])
+    expect(jsFreeFloatParse(",")).toEqual(["0,", 0])
   })
 
   it("handles multiple decimal points by ignoring subsequent ones", () => {
@@ -230,8 +230,8 @@ describe("jsFreeFloatParse", () => {
       expect(jsFreeFloatParse("100.15", options)).toEqual(["100.15", 100.15])
       expect(jsFreeFloatParse("-0.35", options)).toEqual(["-0.35", -0.35])
       /* Short exceptions */
-      expect(jsFreeFloatParse(",", options)).toEqual(["0.0", 0])
-      expect(jsFreeFloatParse(".", options)).toEqual(["0.0", 0])
+      expect(jsFreeFloatParse(",", options)).toEqual(["0.", 0])
+      expect(jsFreeFloatParse(".", options)).toEqual(["0.", 0])
       expect(jsFreeFloatParse("0,", options)).toEqual(["0.", 0])
       expect(jsFreeFloatParse("0.", options)).toEqual(["0.", 0])
       expect(jsFreeFloatParse("-", options)).toEqual(["-", 0])

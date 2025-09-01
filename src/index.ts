@@ -62,7 +62,7 @@ export default function jsFreeFloatParse(input: string, options?: JsFreeFloatPar
     switch (true) {
       case input === ",":
       case input === ".": {
-        outputString = dot ? "0.0" : "0,0"
+        outputString = dot ? "0." : "0,"
         return result()
       }
       case input === "0,":
